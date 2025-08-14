@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MATES GUAY</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="imag/ChatGPT Image 14 ago 2025, 11_22_16.png" type="image/x-icon"> <!--cambiar para nuevas tiendas -->
+
+</head>
+
+<body>
+  <header class="header">
+  <div class="logo-contenedor">
+    <img src="imag/ChatGPT Image 14 ago 2025, 11_56_59.png" alt="LOGO-MATES-GUAY" class="logo"> <!--cambiar para nuevas tiendas -->
+    <h1>MATES GUAY</h1> <!--cambiar para nuevas tiendas -->
+  </div>
+  <p>Diseño, tradición y sabor en un solo mate</p>
+  </header>
+
+ <div id="menu-categorias">
+  <button onclick="filtrarCategoria('todo')">Todos</button>
+  <button onclick="filtrarCategoria('Imperial')">Imperial</button>
+  <!--<button onclick="filtrarCategoria('Imperial Con Base de Alpaca')">Imperial Con Base de Alpaca</button>-->
+  <!--<button onclick="filtrarCategoria('Imperial Con Cuero Repujado y bolitas de Bronc')"> Imperial Con Cuero Repujado y bolitas de Bronce</button>-->
+  <!--<button onclick="filtrarCategoria('Imperial conbinado de acero y Alpaca')">Imperial conbinado de acero y Alpaca</button>-->
+  <!--<button onclick="filtrarCategoria('Imperial sincelado')">Imperial sincelado</button>-->
+  <!--<button onclick="filtrarCategoria('Reforzado con bolitas de Bronce')">Reforzado con bolitas de Bronce </button>-->
+  <button onclick="filtrarCategoria('Torpedo')">Torpedo</button>
+  <button onclick="filtrarCategoria('Camionero')">Camionero</button>
+  <button onclick="filtrarCategoria('Combo')">Combo</button>
+  <button onclick="filtrarCategoria('Oferta')">Oferta</button>
+  <button onclick="filtrarCategoria('Sin Stock')">Sin Stock</button>
+ </div>
+
+
+  <div id="loader" style="text-align:center; margin: 30px 0; font-size: 18px;">
+  <p>Cargando productos...</p>
+  </div>
+
+  <main>
+    <input type="text" id="buscador" placeholder="Buscar productos..." style="width: 35%; padding: 10px; margin-bottom: 20px; font-size: 16px;">
+    <div class="productos" id="contenedor-productos"></div>
+    <div style="text-align:center; margin: 20px;"><button id="btn-mostrar-mas" onclick="mostrarMasProductos()">Más productos</button></div>
+   </main>
+
+  <div id="carrito-flotante">
+      <button id="toggle-carrito">🛒 Ver carrito</button>
+      <div id="carrito-contenido" class="oculto">
+        <h2>Carrito de Compra</h2>
+        <ul id="lista-carrito"></ul>
+        <p id="total">Total: $0</p>
+        <button id="btn-vaciar" style="background: gray; color: white; margin-top: 10px;">Vaciar carrito</button>
+        <button id="btn-enviar">Enviar pedido por WhatsApp</button>
+      </div>
+  </div>
+
+
+  <div id="modal-producto" class="modal oculto">
+    <div class="modal-contenido">
+      <span class="cerrar" onclick="cerrarModal()">&times;</span>
+      <img id="modal-imagen" src="" alt="" style="max-width: 100%; border-radius: 8px;">
+      <h2 id="modal-nombre"></h2>
+      <p id="modal-precio"></p>
+      <p id="modal-descripcion"></p>
+      <button id="modal-agregar">Agregar al carrito</button>
+    </div>
+  </div>
+
+  <footer id="footer">
+  <p><strong>📍 Ubicación:</strong> Calle Juan Castares N° 374, Gualeguay (ER)</p> <!--cambiar para nuevas tiendas -->
+  <p><strong>🕒 Horario de atención:</strong> Lunes a Viernes de 8:30 a 12:30 y Sábado de 08:00 a 10:00 hs</p> <!--cambiar para nuevas tiendas -->
+  </footer>
+
+ <!-- MODAL ELECCIÓN PRECIO -->
+<div id="modal-eleccion-precio" class="modal oculto">
+  <div class="modal-contenido">
+    <span class="cerrar" onclick="cerrarModalEleccion()">&times;</span>
+    <h3 id="titulo-eleccion">¿Cómo desea comprar?</h3>
+    <p id="nombre-producto-eleccion"></p>
+    <button id="btn-unitario">Por unidad</button>
+   
+  </div>
+</div>
+
+<!-- Script principal -->
+<script type="module" src="script.js"></script>
+</body>
+</html>
+
