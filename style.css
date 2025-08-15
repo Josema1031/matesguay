@@ -12,7 +12,7 @@ body {
 
 header {
   background: #20f1f5;
-background: linear-gradient(0deg, rgba(32, 241, 245, 1) 0%, rgba(45, 142, 253, 1) 100%);
+  background: linear-gradient(0deg, rgba(32, 241, 245, 1) 0%, rgba(45, 142, 253, 1) 100%);
   color: black;
   text-align: center;
   padding: 1rem;
@@ -221,8 +221,9 @@ background: linear-gradient(0deg, rgba(32, 241, 245, 1) 0%, rgba(45, 142, 253, 1
 
 /* -------- Botón mostrar más -------- */
 #btn-mostrar-mas {
-  background-color: red;
-  color: white;
+  background: #20f1f5;
+  background: linear-gradient(0deg, rgba(32, 241, 245, 1) 0%, rgba(45, 142, 253, 1) 100%);;
+  color:black;
   border: none;
   padding: 12px 24px;
   font-size: 16px;
