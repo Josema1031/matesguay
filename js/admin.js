@@ -90,6 +90,7 @@
       if (cache) {
         productos = JSON.parse(cache);
         renderTabla();
+        actualizarDashboard(); 
       }
 
       try {
@@ -99,10 +100,9 @@
           ...docSnap.data()
         }));
         productosOriginales = JSON.parse(JSON.stringify(productos)); // Copia profunda
-
-
         sessionStorage.setItem("productosAdmin", JSON.stringify(productos));
         renderTabla();
+        actualizarDashboard(); // ← Agregá esta línea
       } catch (error) {
         alert("❌ Error al cargar los productos desde Firebase");
         console.error(error);
@@ -110,20 +110,23 @@
         document.getElementById("loader").style.display = "none"; // ocultar loader
       }
     }
+
+
     //  🔎 BÚSQUEDA EN TIEMPO REAL
 
     document.getElementById("buscador-admin").addEventListener("input", function () {
-      const texto = this.value.toLowerCase().trim();
+  const texto = this.value.toLowerCase().trim();
 
-      const filtrados = productos.filter(prod =>
-        prod.nombre.toLowerCase().includes(texto) ||
-        prod.categoria.toLowerCase().includes(texto) ||
-        prod.tipoVenta.toLowerCase().includes(texto)
-      );
+  const filtrados = productos.filter(prod =>
+    prod.nombre.toLowerCase().includes(texto) ||
+    prod.categoria.toLowerCase().includes(texto) ||
+    (prod.tipoVenta && prod.tipoVenta.toLowerCase().includes(texto))
+  );
 
-      paginaActual = 1; // Reinicia a la primera página cuando buscas
-      renderTabla(filtrados);
-    });
+  paginaActual = 1; // Reinicia a la primera página
+  renderTabla(filtrados, true); // <-- nuevo parámetro
+});
+
 
     // ✏️ EDITAR PRODUCTO
 
@@ -183,13 +186,13 @@
 
     // 📋 RENDERIZAR TABLA DE PRODUCTOS
 
-    function renderTabla(lista = productos) {
-      const tbody = document.querySelector("#tabla-productos tbody");
-      tbody.innerHTML = "";
+    function renderTabla(lista = productos, filtrado = false) {
+  const tbody = document.querySelector("#tabla-productos tbody");
+  tbody.innerHTML = "";
 
-      const inicio = (paginaActual - 1) * productosPorPagina;
-      const fin = inicio + productosPorPagina;
-      const productosPagina = lista.slice(inicio, fin);
+  const inicio = (paginaActual - 1) * productosPorPagina;
+  const fin = inicio + productosPorPagina;
+  const productosPagina = lista.slice(inicio, fin);
 
       productosPagina.forEach((prod, index) => {
         const fila = document.createElement("tr");
@@ -236,23 +239,53 @@
       <td>
         <input type="text" value="${prod.imagen}" onchange="editar(${inicio + index}, 'imagen', this.value)" style="width: 90%; margin-top: 5px; text-align: center;">
         <div style="text-align: center; margin-top: 5px;">  
-          ${prod.imagen ? `<img src="${prod.imagen}" style="max-width: 80px; display: inline-block;"> ✅` : '❌ Sin imagen'}
+${prod.imagen 
+  ? `<a href="${prod.imagen}" target="_blank">
+       <img src="${prod.imagen}" style="max-width: 100px; border-radius:6px; cursor:pointer;">
+     </a>` 
+  : '❌ Sin imagen'}
+
         </div>
       </td>
       <td><button onclick="eliminarProducto('${prod.id}', ${inicio + index})">🗑️ Eliminar</button></td>
+      <td><input type="number" value="${prod.stock ?? 0}" onchange="editar(${inicio + index}, 'stock', this.value)"></td>
+
     `;
+    if (prod.stock !== undefined && prod.stock < 5) {
+  fila.classList.add("low-stock"); // resalta si queda menos de 5
+}
+
         tbody.appendChild(fila);
       });
       // Ordenar productos por el campo 'orden'
       productos.sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0));
+ // Solo actualizar productosOriginales y sessionStorage si no es filtrado
+  if (!filtrado) {
+    productosOriginales = JSON.parse(JSON.stringify(productos));
+    sessionStorage.setItem("productosAdmin", JSON.stringify(productos));
+  }
 
-      productosOriginales = JSON.parse(JSON.stringify(productos)); // Copia profunda
+  renderPaginacion(lista);
+}
 
-      sessionStorage.setItem("productosAdmin", JSON.stringify(productos));
+// 📄 FUNCION DASHBOARD
+    function actualizarDashboard() {
+  const total = productos.length;
+  const bajoStock = productos.filter(p => p.stock !== undefined && p.stock > 0 && p.stock < 5).length;
+  const sinStock = productos.filter(p => !p.stock || p.stock <= 0).length;
 
+  document.getElementById("total-productos").textContent = total;
+  document.getElementById("productos-bajo-stock").textContent = bajoStock;
+  document.getElementById("productos-sin-stock").textContent = sinStock;
+}
 
-      renderPaginacion(lista);
-    }
+// Llamalo siempre que renderices la tabla
+renderTabla = ((originalRenderTabla) => {
+  return function(lista) {
+    originalRenderTabla(lista);
+    actualizarDashboard();
+  };
+})(renderTabla);
 
     // 📄 RENDERIZAR PAGINACIÓN
 
@@ -294,6 +327,20 @@
 
         for (let i = 0; i < productos.length; i++) {
           const producto = productos[i];
+                // 🚨 Validaciones antes de guardar
+      if (!producto.nombre || producto.nombre.trim() === "") {
+        alert(`❌ El producto #${i + 1} no tiene nombre.`);
+        return;
+      }
+      if (!producto.precio || producto.precio <= 0) {
+        alert(`❌ El producto "${producto.nombre}" debe tener un precio válido.`);
+        return;
+      }
+      if (!producto.imagen || producto.imagen.trim() === "") {
+        alert(`❌ El producto "${producto.nombre}" no tiene imagen.`);
+        return;
+      }
+
 
           // 🔹 Crear tipoVenta solo por compatibilidad
           let tipoVentaGenerado = "";
@@ -319,6 +366,7 @@
             precioMayorista: producto.precioMayorista ?? null,
             precioUnitario: producto.precioUnitario ?? null,
             unidadesPack: producto.unidadesPack ?? null,
+            stock: producto.stock ?? 0,
             orden: i
           };
 
@@ -339,7 +387,9 @@
               original.unidad !== producto.unidad ||
               original.precioUnitario !== producto.precioUnitario ||
               original.precioMayorista !== producto.precioMayorista ||
-              original.unidadesPack !== producto.unidadesPack
+              original.unidadesPack !== producto.unidadesPack ||
+              original.unidadesPack !== producto.unidadesPack ||
+              original.stock !== producto.stock
             ) {
               const ref = doc(productosRef, producto.id);
               operaciones.push(updateDoc(ref, data));

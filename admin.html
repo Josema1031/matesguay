@@ -43,6 +43,22 @@
       <button onclick="guardarProductos()">💾 Guardar Cambios</button>
       <button onclick="cerrarSesion()" style="background-color: darkred; color: white;">🔒 Cerrar sesión</button>
     </div>
+    
+    <div id="dashboard">
+  <div class="card">
+    <h3>Total de productos</h3>
+    <p id="total-productos">0</p>
+  </div>
+  <div class="card low-stock-card">
+    <h3>Stock bajo</h3>
+    <p id="productos-bajo-stock">0</p>
+  </div>
+  <div class="card no-stock-card">
+    <h3>Sin stock</h3>
+    <p id="productos-sin-stock">0</p>
+  </div>
+</div>
+
 
     <table id="tabla-productos">
       <thead>
@@ -55,13 +71,16 @@
           <th>Unidades<br>por Pack</th>
           <th>Categoria</th>
           <th>tipo de venta</th>
-          <th>Imagen (URL)</th>
+          <th>Imagen (URL)</th>          
           <th>Acciones</th>
+          <th>Stock</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
+
+
   <div id="paginacion" style="text-align:center; margin-top:20px;"></div>
 
 <script type="module" src="js/admin.js"></script>

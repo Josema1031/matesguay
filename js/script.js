@@ -98,20 +98,17 @@ function mostrarCarrito() {
 
     // Crear input para cantidad editable
     const inputCantidad = document.createElement("input");
-    inputCantidad.type = "number";
-    inputCantidad.min = "1";
-    inputCantidad.value = prod.cantidad;
-    inputCantidad.style.width = "45px";
-    inputCantidad.style.margin = "0 8px";
+inputCantidad.type = "number";
+inputCantidad.min = "1";
+inputCantidad.max = prod.stock ?? ""; // 🔹 límite máximo si hay stock definido
+inputCantidad.value = prod.cantidad;
+inputCantidad.style.width = "45px";
+inputCantidad.style.margin = "0 8px";
+
 
     // Cuando cambie el valor del input, actualizamos cantidad y precios
-    inputCantidad.addEventListener("change", (e) => {
-      let valor = parseInt(e.target.value);
-      if (isNaN(valor) || valor < 1) valor = 1;
-      carrito[index].cantidad = valor;
-      actualizarPreciosPorCantidad();
-      actualizarCarrito();
-    });
+   
+
     
     li.innerHTML = `${prod.nombre} (${tipo}) - $${prod.precio} x `;
     
@@ -123,6 +120,19 @@ function mostrarCarrito() {
     strong.textContent = `$${subtotal.toFixed(2)}`;
     
     li.appendChild(strong);
+
+    // 🔹 Mostrar stock disponible
+const stockInfo = document.createElement("span");
+stockInfo.style.fontSize = "12px";
+stockInfo.style.color = "gray";
+stockInfo.style.marginLeft = "8px";
+
+if (prod.stock !== undefined) {
+  stockInfo.textContent = `(Máx: ${prod.stock})`;
+}
+
+li.appendChild(stockInfo);
+
     
 
     // Botones
@@ -167,7 +177,15 @@ function mostrarCarrito() {
 function actualizarCarrito() {
   guardarCarrito();
   mostrarCarrito();
+  actualizarContadorCarrito(); // 👈 lo agregamos acá
 }
+function actualizarContadorCarrito() {
+  const contador = document.getElementById("contador-carrito");
+  const totalUnidades = carrito.reduce((acc, p) => acc + (p.cantidad || 0), 0);
+  contador.textContent = totalUnidades;
+}
+
+
 
 // =============================
 // ➕ AGREGAR PRODUCTO AL CARRITO
@@ -179,24 +197,36 @@ function agregarAlCarrito(id, nombre, precioBase) {
 
   const index = carrito.findIndex(p => p.id === id);
 
+  // 🔹 Verificar stock disponible
+  const stockDisponible = producto.stock ?? Infinity; // si no tiene stock definido, no limita
+
   if (index !== -1) {
-    carrito[index].cantidad += 1;
+    if (carrito[index].cantidad < stockDisponible) {
+      carrito[index].cantidad += 1;
+    } else {
+      alert(`⚠️ No hay más stock disponible para ${producto.nombre}`);
+    }
   } else {
-    const precioInicial = producto.precioUnitario || producto.precio || precioBase;
-    carrito.push({ 
-      id, 
-      nombre, 
-      cantidad: 1, 
-      precio: precioInicial,
-      precioUnitario: producto.precioUnitario || producto.precio,
-      precioMayorista: producto.precioMayorista || producto.precio,
-      unidadesPack: producto.unidadesPack || 36
-    });
+    if (stockDisponible > 0) {
+      const precioInicial = producto.precioUnitario || producto.precio || precioBase;
+      carrito.push({ 
+        id, 
+        nombre, 
+        cantidad: 1, 
+        precio: precioInicial,
+        precioUnitario: producto.precioUnitario || producto.precio,
+        precioMayorista: producto.precioMayorista || producto.precio,
+        unidadesPack: producto.unidadesPack || 36
+      });
+    } else {
+      alert(`⚠️ ${producto.nombre} está sin stock`);
+    }
   }
 
   actualizarPreciosPorCantidad();
   actualizarCarrito();
 }
+
 
 // =============================
 // 💲 ACTUALIZAR PRECIOS SEGÚN CANTIDAD
@@ -215,10 +245,18 @@ function actualizarPreciosPorCantidad() {
 // =============================
 
 function aumentarCantidad(index) {
-  carrito[index].cantidad += 1;
-  actualizarPreciosPorCantidad();
-  actualizarCarrito();
+  const producto = productosCargados.find(p => p.id === carrito[index].id);
+  const stockDisponible = producto?.stock ?? Infinity;
+
+  if (carrito[index].cantidad < stockDisponible) {
+    carrito[index].cantidad += 1;
+    actualizarPreciosPorCantidad();
+    actualizarCarrito();
+  } else {
+    alert(`⚠️ No podés agregar más, stock máximo alcanzado (${stockDisponible} unidades).`);
+  }
 }
+
 // =============================
 // 🔽 DISMINUIR CANTIDAD DE PRODUCTO
 // =============================
@@ -249,9 +287,10 @@ function eliminarDelCarrito(index) {
 document.getElementById("btn-vaciar").addEventListener("click", () => {
   if (confirm("¿Estás seguro que querés vaciar el carrito?")) {
     carrito = [];
-    actualizarCarrito();
+    actualizarCarrito(); // ya actualiza todo, incluido el contador
   }
 });
+
 
 // =============================
 // 📲 ENVIAR PEDIDO POR WHATSAPP
@@ -326,8 +365,11 @@ function cargarMasProductos(lista) {
     <!-- ${prod.precioUnitario ? `<p><strong>Precio Unitario:</strong> $${prod.precioUnitario}</p>` : ""} -->
     ${prod.precioMayorista ? `<p><strong>Precio Mayorista:</strong> $${prod.precioMayorista}</p>` : ""}
         ${prod.unidadesPack ? `<p><strong>Unidades por pack:</strong> ${prod.unidadesPack}</p>` : ""}
-        <button onclick="agregarAlCarrito('${prod.id}', '${prod.nombre.replaceAll("'", "\\'")}', ${prod.precio})">Agregar</button>
-      </div>
+      ${prod.stock && prod.stock > 0 
+  ? `<button onclick="agregarAlCarrito('${prod.id}', '${prod.nombre.replaceAll("'", "\\'")}', ${prod.precio})">Agregar</button>`
+  : `<button disabled style="background: gray; cursor: not-allowed;">Sin stock</button>`}
+
+        </div>
     `;
 
     contenedor.appendChild(div);

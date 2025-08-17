@@ -16,8 +16,14 @@ header {
   background: linear-gradient(0deg, rgba(32, 241, 245, 1) 0%, rgba(45, 142, 253, 1) 100%);
   color: black;
   text-align: center;
-  padding: 1rem;
+   padding: 10px 0;
+  position: sticky; /* o fixed si querés que quede totalmente fijo */
+  z-index: 1000;    /* para que quede por encima de todo */
+   top: 0;  /* se pega al tope de la ventana */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* opcional, sombra */
 }
+
+
 
 .header {
   text-align: center;
@@ -400,4 +406,35 @@ header {
   position: absolute;
   top: 10px;
   left: 10px;
+}
+.card button[disabled] {
+  color: black;
+  opacity: 0.6;
+  font-weight: bold;
+}
+#lista-carrito li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+#lista-carrito li span {
+  font-style: italic;
+}
+
+.dashboard-card {
+  flex: 1;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+.low-stock-card {
+  background-color: #fff3cd; /* amarillo */
+}
+.no-stock-card {
+  background-color: #f8d7da; /* rojo */
 }
