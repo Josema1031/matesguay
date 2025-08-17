@@ -1,0 +1,199 @@
+
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  table {
+    table-layout: fixed;  /* fuerza distribución */
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+  }
+
+  th,
+  td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    word-wrap: break-word;  /* permite cortar palabras largas */
+    white-space: normal;    /* deja que el texto salte de línea */
+  }
+
+  #password,
+  #email {
+    width: 100%;
+    padding: 5px;
+  }
+
+  button {
+    padding: 8px 12px;
+    margin: 5px;
+    cursor: pointer;
+  }
+
+  #acciones {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  #login-container {
+    max-width: 400px;
+    height: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  #admin-panel {
+    display: none;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .precio-anterior {
+    text-decoration: line-through;
+    color: gray;
+  }
+
+  .precio-actual {
+    font-weight: bold;
+    color: green;
+    font-size: 18px;
+  }
+
+  .etiqueta-descuento {
+    background-color: red;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  /* Mantener ancho fijo y columnas equilibradas */
+  #tabla-productos {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  /* Ajuste de anchos por columna */
+  #tabla-productos th:nth-child(1),
+  #tabla-productos td:nth-child(1) {
+    width: 170px; /* Nombre */
+  }
+
+  #tabla-productos th:nth-child(2),
+  #tabla-productos td:nth-child(2) {
+    width: 70px; /* Precio */
+  }
+
+  #tabla-productos th:nth-child(3),
+  #tabla-productos td:nth-child(3) {
+    width: 90px; /* Precio anterior */
+  }
+
+  #tabla-productos th:nth-child(4),
+  #tabla-productos td:nth-child(4) {
+    width: 90px; /* % Desc. */
+  }
+
+  #tabla-productos th:nth-child(5),
+  #tabla-productos td:nth-child(5) {
+    width: 90px; /* Precio Mayorista */
+  }
+
+  #tabla-productos th:nth-child(6),
+  #tabla-productos td:nth-child(6) {
+    width: 90px; /* Unidades x Pack */
+  }
+
+  #tabla-productos th:nth-child(7),
+  #tabla-productos td:nth-child(7) {
+    width: 100px; /* Categoría */
+  }
+
+  #tabla-productos th:nth-child(8),
+  #tabla-productos td:nth-child(8) {
+    width: 120px; /* Tipo de venta */
+  }
+
+  #tabla-productos th:nth-child(9),
+  #tabla-productos td:nth-child(9) {
+    width: 100px; /* Imagen */
+  }
+  /* Columna de Acciones */
+#tabla-productos th:nth-child(10),
+#tabla-productos td:nth-child(10) {
+  width: 100px;          /* ancho fijo para esa columna */
+  min-width: 100px;      /* asegura espacio mínimo */
+  text-align: center;    /* centra el botón */
+  white-space: nowrap;   /* evita saltos raros */
+}
+
+  /* Compactar inputs y selects */
+  #tabla-productos input,
+  #tabla-productos select {
+    width: 100%;
+    padding: 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+
+  /* Imagen más pequeña */
+  #tabla-productos img {
+    max-width: 50px;
+    height: auto;
+  }
+
+  /* Bordes y estilo */
+  #tabla-productos th,
+  #tabla-productos td {
+    border: 1px solid #ddd;
+    padding: 6px;
+    text-align: center;
+  }
+
+  /* Encabezado con fondo */
+  #tabla-productos th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+
+  /* Contenedor con scroll horizontal si es necesario */
+  .tabla-contenedor {
+    overflow-x: auto;
+  }
+
+  /* Ajustes en pantallas chicas */
+  @media (max-width: 768px) {
+  .tabla-contenedor {
+    overflow-x: auto;
+    display: block;
+  }
+
+  #tabla-productos {
+    min-width: 800px; /* ancho mínimo de la tabla */
+  }
+}
+
+

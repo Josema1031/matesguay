@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MATES GUAY</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="shortcut icon" href="imag/ChatGPT Image 14 ago 2025, 11_22_16.png" type="image/x-icon"> <!--cambiar para nuevas tiendas -->
-<!-- Open Graph para WhatsApp y redes sociales -->
+  <link rel="shortcut icon" href="imag/ChatGPT Image 14 ago 2025, 11_56_59.png" type="image/x-icon"> <!--cambiar para nuevas tiendas -->
+<!-- Open Graph Meta Tags para WhatsApp y redes sociales -->
 <meta property="og:title" content="Mates Guay - Mates y Accesorios de Calidad" />
 <meta property="og:description" content="Descubrí nuestros mates, bombillas y accesorios artesanales. ¡Envíos a todo el país!" />
 <meta property="og:image" content="https://josema1031.github.io/matesguay/imag/logo_600x315.png" />
@@ -42,7 +42,7 @@
   <button onclick="filtrarCategoria('Camionero')">Camionero</button>
   <button onclick="filtrarCategoria('Combo')">Combo</button>
   <button onclick="filtrarCategoria('Oferta')">Oferta</button>
-  <button onclick="filtrarCategoria('Sin Stock')">Sin Stock</button>
+  
  </div>
 
 
@@ -96,7 +96,32 @@
 </div>
 
 <!-- Script principal -->
-<script type="module" src="script.js"></script>
+<script type="module" src="js/script.js"></script>
+<script type="module">
+  import { tiendaConfig } from "./js/config.js";
+
+
+  // Logo y nombre
+  document.querySelector(".logo").src = tiendaConfig.logo;
+  document.querySelector(".logo").alt = tiendaConfig.nombre;
+  document.querySelector("header h1").textContent = tiendaConfig.nombre;
+
+  // Footer
+  document.querySelector("#footer").innerHTML = `
+    <p><strong>📍 Ubicación:</strong> ${tiendaConfig.direccion}</p>
+    <p><strong>🕒 Horario de atención:</strong> ${tiendaConfig.horarios}</p>
+    <p><strong>📱 WhatsApp:</strong> <a href="https://wa.me/${tiendaConfig.whatsapp}" target="_blank">${tiendaConfig.whatsapp}</a></p
+  `;
+
+  // Metadatos dinámicos
+  document.querySelector("meta[property='og:title']").setAttribute("content", tiendaConfig.nombre);
+  document.querySelector("meta[property='og:image']").setAttribute("content", tiendaConfig.metaImage);
+  document.querySelector("meta[property='og:url']").setAttribute("content", window.location.href);
+
+  document.querySelector("meta[name='twitter:title']").setAttribute("content", tiendaConfig.nombre);
+  document.querySelector("meta[name='twitter:image']").setAttribute("content", tiendaConfig.metaImage);
+</script>
+
 </body>
 </html>
 
